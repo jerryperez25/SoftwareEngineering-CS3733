@@ -1,0 +1,524 @@
+swagger: "2.0"
+info:
+  description: Empiricist Video Manager API
+  version: 1.0.0
+  title: Empiricist Video Manager API 
+  contact:
+    email: jperez2@wpi.edu
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    
+tags:
+- name: Admin
+  description: Secured Admin-only calls
+- name: Participant
+  description: Operations available to regular participants
+schemes:
+- https
+
+paths:
+  /directParticipant:
+    post:
+      tags:
+      - Participant
+      summary: relocates URL to particant page 
+      description: Requests to bring participant to participant page
+      operationId: iamParticipant
+      responses:
+        200:
+          description: The participant is taken to the appropriate page.
+  /directAdmin:
+    post:
+      tags:
+      - Admin
+      summary: relocated URL to admin page 
+      description: Requests to bring admin to admin page
+      operationId: iamAdmin
+      responses:
+        200:
+          description: The administrator is taken to the appropriate page.
+          
+  /uploadVideoSegment:
+    post:
+      tags:
+      - Participant
+      summary: requests an upload of a video segment
+      description: Requests to upload a video segment
+      operationId: requestUpload
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: VideoRequest
+        description: Obtains a video segment
+        required: false
+        schema:
+          $ref: '#/definitions/VideoRequest'
+      responses:
+        200:
+          description: Video segment uploaded.
+        400:
+          description: invalid input, segment invalid
+        409:
+          description: valid input but duplicate segment
+          
+  /deleteVideoSegment:
+   post:
+      tags:
+      - Participant
+      summary: request to delete a segment
+      description: Removes the designated segment.
+      operationId: requestSegDelete
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: VideoRequest
+        description: Obtains the desired video segment
+        required: false
+        schema:
+          $ref: '#/definitions/VideoRequest'
+      responses:
+        200:
+          description: Video segment deleted.
+        400:
+          description: invalid input, segment invalid
+          
+  /listVideoSegments:
+    get:
+      tags:
+      - Participant
+      summary: request a list of available video segments.
+      description: Returns a list of local and remote video segments.
+      operationId: showSegs
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: A list of segments is shown to the participant.
+          
+  /searchStringSegment:
+    post:
+      tags:
+      - Participant
+      summary: Request to search a segment by string
+      description: Requests to search a segment by string
+      operationId: searchStringSegment
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: SearchStringRequest
+        description: Obtains the string that has been entered by participant.
+        required: false
+        schema:
+          $ref: '#/definitions/SearchStringRequest'
+      responses:
+        200:
+          description: search criteria is valid
+        400:
+          description: there are no available segments that match the criteria
+          
+  /searchCharSegment:
+    post:
+      tags:
+      - Participant
+      summary: Request to search a segment by a character
+      description: Requests to search a segment by character
+      operationId: searchCharSegment
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: SearchStringRequest
+        description: Obtains the character that has been entered by participant.
+        required: false
+        schema:
+          $ref: '#/definitions/SearchStringRequest'
+      responses:
+        200:
+          description: search criteria is valid
+        400:
+          description: there are no available segments that match the criteria
+          
+  /createPlayList:
+    post:
+      tags:
+      - Participant
+      summary: request to create a playlist.
+      description: Requests to create a playlist.
+      operationId: requestPlayListCreation
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: NameRequest
+        description: Creates a playlist with the specified name
+        required: false
+        schema:
+          $ref: '#/definitions/createPlaylistRequest'
+      responses:
+        200:
+          description: the playlist is valid
+        400:
+          description: playlist is invalid.
+        409:
+          description: playlist valid but duplicate entry
+          
+  /deletePlaylist:
+   post:
+      tags:
+      - Participant
+      summary: request to delete a playlist
+      description: Removes the designated playlist.
+      operationId: requestPlayDelete
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: DeletePlayRequest
+        description: Obtains the desired playlist
+        required: false
+        schema:
+          $ref: '#/definitions/DeletePlayRequest'
+      responses:
+        200:
+          description: Playlist deleted.
+        400:
+          description: invalid input, playlist invalid
+          
+  /listPlaylists:
+    get:
+      tags:
+      - Participant
+      summary: request a list of playlists
+      description: Returns a list of playlists.
+      operationId: showPlay
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: A list of playlists is shown to the participant.
+          
+  /removeSegFromPlay:
+   post:
+      tags:
+      - Participant
+      summary: request to remove a segment from a playlist
+      description: Removes the designated segment.
+      operationId: requestSegRemoval
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: SegRemoveRequest
+        description: Obtain the desired segment to remove within the playlist.
+        required: false
+        schema:
+          $ref: '#/definitions/SegRemoveRequest'
+      responses:
+        200:
+          description: Video segment is removed from desired Playlist.
+        400:
+          description: the segment does not exist in the specified playlist
+          
+  /appendSeg:
+   post:
+      tags:
+      - Participant
+      summary: request to append segments.
+      description: Appends segments.
+      operationId: appendSegment
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: appendSegmentRequest
+        description: Obtains a segment that would like to be appeneded.
+        required: false
+        schema:
+          $ref: '#/definitions/appendSegmentRequest'
+      responses:
+        200:
+          description: Video segment is appended.
+        400:
+          description: There is no segment to append.
+        409:
+          description: There is no room to append.
+          
+  /playPlaylist:
+   post:
+      tags:
+      - Participant
+      summary: request to play the contents of a playlist
+      description: Plays the segments inside of the playlist
+      operationId: playPlay
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: PlayRequest
+        description: Obtains a playlist that would like to be played.
+        required: false
+        schema:
+          $ref: '#/definitions/PlayRequest'
+      responses:
+        200:
+          description: The contents of a playlist is played.
+        400: 
+          description: The playlist is invalid.
+        409:
+          description: There is no segments inside of the playlist.
+          
+  /markSeg:
+   post:
+      tags:
+      - Admin
+      summary: requests to mark segment
+      description: Makes the segment no longer remotely visible.
+      operationId: markSegement
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: MarkSegRequest
+        description: Obtains a segment that will be marked.
+        required: false
+        schema:
+          $ref: '#/definitions/MarkSegRequest'
+      responses:
+        200:
+          description: A segment is marked.
+        400:
+          description: The segment is invalid.
+        409:
+          description: The segment is already marked.
+          
+  /unmarkSeg:
+   post:
+      tags:
+      - Admin
+      summary: requests to unmark segment
+      description: Makes the segment remotely visible.
+      operationId: unmarkSegement
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: UnmarkSegRequest
+        description: Obtains a segment that will be unmarked.
+        required: false
+        schema:
+          $ref: '#/definitions/UnmarkSegRequest'
+      responses:
+        200:
+          description: A segment is unmarked.
+        400:
+          description: The segment is invalid.
+        409:
+          description: The segment is already unmarked.
+          
+  /registerTP:
+   post:
+      tags:
+      - Admin
+      summary: requests to register a third party site.
+      description: Desired URL is registered as third party site.
+      operationId: registerSite
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: URLRequestReg
+        description: Obtains a URL to register as a Third Party site.
+        required: false
+        schema:
+          $ref: '#/definitions/URLRequestReg'
+      responses:
+        200:
+          description: A URL is verified as a third party site.
+        400:
+          description: The URL is invalid.
+        409:
+          description: The URL is already registered.
+          
+  /unregisterTP:
+   post:
+      tags:
+      - Admin
+      summary: requests to unregister a third party site.
+      description: Desired URL is unregistered as third party site.
+      operationId: unregisterSite
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: URLRequestUnReg
+        description: Obtains a URL to register as a Third Party site.
+        required: false
+        schema:
+          $ref: '#/definitions/URLRequestUnReg'
+      responses:
+        200:
+          description: A URL is unverified as a third party site.
+        400:
+          description: The URL is invalid.
+        409:
+          description: The URL is already unregistered.
+          
+  /listRemoteSites:
+    get:
+      tags:
+      - Admin
+      summary: request a list of remote sites.
+      description: Returns a list of remote sites.
+      operationId: showRemote
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: A list of remote sites is shown to the administrator.
+          
+  /ListSegInPlaylist:
+    get:
+      tags:
+      - Participant
+      summary: request a list of video segments located inside a playlist.
+      description: Returns a list of local and remote video segments inside a playlist.
+      operationId: showSegsInPlaylist
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: A list of segments inside a playlist are shown.
+
+definitions:
+  VideoRequest:
+    type: object
+    required:
+    - segID
+    properties:
+      segID:
+        type: string
+        
+  SearchStringRequest:
+    type: object
+    required:
+    - string
+    properties:
+      string:
+        type: string
+        
+  createPlaylistRequest:
+    type: object
+    required:
+    - playlistName
+    properties:
+      playlistName:
+        type: string
+        
+  PlayRequest:
+    type: object
+    required:
+    - playlist
+    properties:
+      playlist:
+        type: string
+  
+  SegRemoveRequest:
+    type: object
+    required:
+    - orderNum
+    properties:
+      segID:
+        type: integer
+      
+  appendSegmentRequest:
+    type: object
+    required:
+    - segmentID
+    properties:
+      segmentID:
+        type: string
+      
+  DeletePlayRequest:
+    type: object
+    required:
+    - playlistName
+    properties:
+      playlistName:
+        type: string
+        
+  MarkSegRequest:
+    type: object
+    required:
+    - segmentID
+    - status
+    properties:
+      segmentID:
+        type: string
+      status: 
+        type: boolean 
+
+  UnmarkSegRequest:
+    type: object
+    required:
+    - segmentID
+    - status
+    properties:
+      segmentID:
+        type: string
+      status:
+        type: boolean 
+
+  URLRequestReg:
+    type: object
+    required:
+    - url
+    properties:
+      url:
+        type: string
+    
+  URLRequestUnReg:
+    type: object
+    required:
+    - url
+    properties:
+      url:
+        type: string
+  
+# Added by API Auto Mocking Plugin
+basePath: /cs3733Empiricist/EmpiricistAPI/1.0.0
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com

@@ -1,0 +1,19 @@
+Jerry Perez
+Individual Project 2
+CS3733
+November 11th, 2019
+
+	The game will be launched through the Launcher class which displays the Double-Slided game board!
+	
+	When the user attempts to play the game, clicks that are not valid will simply not be accounted for. Every move will
+	increment the move counter by one up until a reset is requested, which will bring the counter back down to 0. When the player 
+	clicks a tile that leads to a winning board, they will be prompted on the Console that they have won the game. 
+	In an attempt to freeze JUST the JPanel upon winning, the "get" method in DSApp did not cooperate so I just left it as is. 
+	I understand I could have frozen the entire App, but that would eliminate functionality of hitting the reset button 
+	after either a winning or a losing move. Upon losing the game, the player will be prompted on the console as well that
+	they have lost the game, and they will be prompted to reset. The JPanel statement applies here as well. To close the 
+	application, the user may click the red button (for mac) or red "X" (on pc), followed by striking "yes".
+	
+	I hope you enjoy,
+	
+	Jerry P. 
